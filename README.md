@@ -3,7 +3,7 @@
 
 ![devverACv](https://user-images.githubusercontent.com/50266731/124455856-00675580-ddc5-11eb-85a1-4ba70c79cd80.png)
 
-### [Preview video](https://www.notion.so/vdoring/Anime-Character-viewer-06617d2e85f049c68277ee689d2d9897)
+### [Download](https://github.com/HeadFirst-Program/Anime-character-viewer/releases)
 
 ------
 
