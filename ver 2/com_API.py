@@ -90,10 +90,15 @@ def setBrowser():
 def playImageRepeat(user_image_info):
     os.system('mode con cols=40 lines=11')
     
-    print('< if you want to stop, press Ctrl+C >')
+    print('\n< if you want to stop, press Ctrl+C >')
     try:
-        while True:
-            playImage(user_image_info[:3], user_image_info[3:])
+        if user_image_info[:3] == 'SFW':
+            while True:
+                playImage(user_image_info[:3], user_image_info[3:])
+        elif user_image_info[:4] == 'NSFW':
+            while True:
+                playImage(user_image_info[:4], user_image_info[4:])
+
     except KeyboardInterrupt:
         return
 
@@ -113,7 +118,7 @@ def playImage(user_image_type, user_image_category):
     image_url = image_url.replace('type', user_image_type.lower())
     image_url = image_url.replace('category', user_image_category.lower())
 
-    res = requests.get(image_url) # URL 구하는데 0.5초 걸린다
+    res = requests.get(image_url) # 이미지 URL 구하는데 0.5초 걸린다
     image_url = res.text
     
     if current_run_browser_name == 'chrome':
