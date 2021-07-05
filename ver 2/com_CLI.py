@@ -8,7 +8,7 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0-CLI')
+        os.system('title ACv v2.0')
 
         print('< Anime Character viewer >')
         print('Select the image output type.\n')
@@ -89,10 +89,10 @@ def screenSingleModeSetting():
             try:
                 if user_input.lower() == 'y':
                     api.setBrowser()
-                    break
+                    return
                 elif user_input.lower() == 'n':
                     api.valApiCountUp('browser_changed')
-                    break
+                    return
                 else:
                     print('[!] Please enter \'y\' or \'n\'! [!]')
                 time.sleep(0.75)
@@ -100,8 +100,6 @@ def screenSingleModeSetting():
                 print('[!] Please enter \'y\' or \'n\'! [!]')
                 time.sleep(0.75)
             os.system('cls')
-
-    return
     
 
 #by VDoring. 2021.07.05
@@ -109,3 +107,75 @@ def screenSingleModeSetting():
 #리턴값: 없음
 def screenMuitiModeSetting():
     pass
+
+
+#by VDoring. 2021.07.05
+#SFW와 NSFW중 선택합니다.
+#리턴값: SFW, NSFW
+def screenTypeSelect():
+    os.system('mode con cols=40 lines=11')
+
+    while True:
+        print('< Select type >')
+        print('[1] SFW')
+        print('[2] NSFW')
+        user_input = input('= ')
+
+        if user_input == '1':
+            return 'SFW'
+        elif user_input == '2':
+            return 'NSFW'
+        else:
+            print('[!] Please enter a right number! [!]')
+            time.sleep(0.75)
+            os.system('cls')
+
+
+
+#by VDoring. 2021.07.05
+#SFW와 NSFW에 속해있는 카테고리를 선택합니다.
+#매개변수: user_image_type=사용자가 선택한 이미지 type
+#리턴값: SFW/NSFW + 'waifu', 'neko', 'shinobu', 'megumin', 'bully', 'cuddle', 'cry', 'hug',
+#                   'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet', 'blush', 'smile',
+#                   'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill',
+#                   'kick', 'happy', 'wink', 'poke', 'dance', 'cringe', 'trap', 'blowjob'
+def screenCategorySelect(user_image_type):
+    os.system('mode con cols=40 lines=38')
+
+    sfw_category_list = ('waifu', 'neko', 'shinobu', 'megumin', 'bully', 'cuddle', 'cry', 'hug',
+                    'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet', 'blush', 'smile',
+                    'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill',
+                    'kick', 'happy', 'wink', 'poke', 'dance', 'cringe')
+
+    nsfw_category_list = ('waifu', 'neko', 'trap', 'blowjob')
+
+    if user_image_type == 'SFW' :
+        while True:
+            print('< Select SFW category >')
+            for i in range(1,len(sfw_category_list)+1):
+                print('[%d] '%i, end='')
+                print('%s'%sfw_category_list[i-1])
+            user_input = input('= ')
+
+            if user_input.isdigit():
+                return 'SFW' + sfw_category_list[int(user_input)-1]
+            else:
+                print('[!] Please enter a right number! [!]')
+                time.sleep(0.75)
+                os.system('cls')
+
+    elif user_image_type == 'NSFW':
+        while True:
+            print('< Select NSFW category >')
+            for i in range(1,len(nsfw_category_list)+1):
+                print('[%d] '%i, end='')
+                print('%s'%nsfw_category_list[i-1])
+            user_input = input('= ')
+
+            if user_input.isdigit():
+                return 'NSFW' + nsfw_category_list[int(user_input)-1]
+            else:
+                print('[!] Please enter a right number! [!]')
+                time.sleep(0.75)
+                os.system('cls')
+
