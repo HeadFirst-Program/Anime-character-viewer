@@ -8,7 +8,7 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0')
+        os.system('title ACv v2.0-Dev.1')
 
         print('< Anime Character viewer >')
         print('Select the image output type.\n')
@@ -38,7 +38,8 @@ def screenSettings():
         print('< Settings menu >')
         print('[1] Image time delay')
         print('[2] Web browser')
-        print('[3] EXIT')
+        print('[3] .txt file')
+        print('[4] EXIT')
         user_input = input('= ')
 
         if user_input == '1':
@@ -46,6 +47,8 @@ def screenSettings():
         elif user_input == '2':
             api.setBrowser()
         elif user_input == '3':
+            api.setSaveUrlToTxt()
+        elif user_input == '4':
             return
         else:
             print('[!] Please enter a right number! [!]')
@@ -105,8 +108,51 @@ def screenSingleModeSetting():
 #by VDoring. 2021.07.05
 #사진 다중 출력 모드의 세부옵션을 출력하고 선택하게 합니다.
 #리턴값: 없음
-def screenMuitiModeSetting():
-    pass
+def screenMultiModeSetting():
+    os.system('mode con cols=50 lines=11')
+    
+    if api.is_edit_txt_info == 0:
+        while True:
+            print('< Settings >\n')
+            print('Current .txt file name: %s'%api.current_txt_name)
+            print('Current \'save URL to .txt file\' mode: %s'%api.is_save_url_to_txt)
+            print('\nDo you want to enter .txt file settings? [y/n]')
+            user_input = input('= ')
+
+            try:
+                if user_input.lower() == 'y':
+                    api.setSaveUrlToTxt()
+                    break
+                elif user_input.lower() == 'n':
+                    api.valApiCountUp('txt_info_changed')
+                    break
+                else:
+                    print('[!] Please enter \'y\' or \'n\'! [!]')
+                    time.sleep(0.75)
+            except:
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.75)
+            os.system('cls')
+
+    os.system('cls')
+
+    while True:
+        print('< Settings >\n')
+        print('How many URLs do you need?')
+        print('Current: %d'%api.current_need_url_count)
+        try:
+            user_input = int(input('= '))
+
+            if user_input >= 1:
+                api.setNeedUrlCount(user_input)
+                return
+            else:
+                print('[!] Please enter a right number! [!]')
+                time.sleep(0.75)
+        except:
+            print('[!] Please enter a right number! [!]')
+            time.sleep(0.75)
+        os.system('cls')
 
 
 #by VDoring. 2021.07.05
