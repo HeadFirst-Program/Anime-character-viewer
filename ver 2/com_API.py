@@ -105,7 +105,7 @@ def playImageRepeat(user_image_info):
 
 #by VDoring. 2021.07.05
 #사용자가 선택한 이미지 type과 category에 맞는 이미지를 출력합니다.
-#매개변수: user_image_type=사용자가 선택한 이미지 type
+#매개변수: user_image_type=사용자가 선택한 이미지의 type
 #          user_image_category=사용자가 선택한 이미지 category
 #리턴값: 없음
 def playImage(user_image_type, user_image_category):
