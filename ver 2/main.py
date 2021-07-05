@@ -9,3 +9,6 @@ while True:
         cli.screenMuitiModeSetting() # Muiti모드 실행 전 환경설정
     elif user_input == 3:
         cli.screenSettings() # 환경설정 메뉴
+        continue
+    
+    api.playImageRepeat(cli.screenCategorySelect(cli.screenTypeSelect())) # type과 category 선택 후 이미지 재생
