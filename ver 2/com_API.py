@@ -6,8 +6,16 @@ image_delay_time = 2.0 # 다음 사진을 보여주기까지의 지연시간
 
 command_chrome_run = 'start chrome -incognito ' # 크롬 시크릿모드 실행 명령어
 command_edge_run = 'start msedge -inprivate ' # 엣지 시크릿모드 실행 명령어
-current_run_browser_name = 'edge'
-is_run_browser_changed = 0
+
+current_run_browser_name = 'edge' # 현재 사용설정된 브라우저
+is_run_browser_changed = 0 # 사용자가 브라우저 설정여부를 본 휫수
+
+is_save_url_to_txt = 'y' # 현재 URL을 txt파일에 저장하는지에 대한 여부
+current_txt_name = 'URLlist' # URL을 저장하는 txt파일의 이름
+is_edit_txt_info = 0 # 사용자가 .txt파일 설정여부를 본 휫수
+
+current_need_url_count = 60 #Multi 모드에서 몇장의 URL 개수가 필요한지 저장
+
 
 #by VDoring. 2021.07.05
 #com_API.py의 특정 변수의 값을 올립니다.
@@ -15,9 +23,12 @@ is_run_browser_changed = 0
 #리턴값: 없음
 def valApiCountUp(val_name):
     global is_run_browser_changed
+    global is_edit_txt_info
 
     if val_name == 'browser_changed':
         is_run_browser_changed += 1
+    elif val_name == 'txt_info_changed':
+        is_edit_txt_info += 1
 
 
 #by VDoring. 2021.07.05
@@ -29,8 +40,6 @@ def setDelayTime():
     os.system('mode con cols=50 lines=11')
 
     while True:
-        os.system('cls')
-
         print('< Set image delay time >')
         print('unit of time: Seconds(0, 1, 2, 1.5, 2.5, etc..)')
         print('Current delay time: %f seconds'%image_delay_time)
@@ -45,6 +54,7 @@ def setDelayTime():
         except:
             print('[!] Please enter a number! [!]')
             time.sleep(0.75)
+            os.system('cls')
 
 
 
@@ -58,8 +68,6 @@ def setBrowser():
     os.system('mode con cols=50 lines=11')
 
     while True:
-        os.system('cls')
-
         print('< Set web browser >')
         print('Browser list: chrome, edge')
         print('Current web browser: %s'%current_run_browser_name)
@@ -81,6 +89,84 @@ def setBrowser():
         else:
             print('[!] Please correct enter a string! [!]')
             time.sleep(0.75)
+            os.system('cls')
+
+
+#by VDoring. 2021.07.05
+#.txt 파일의 이름을 설정하고, URL을 .txt파일에 저장할지에 대한 여부를 설정할 수 있습니다.
+#리턴값: 없음
+def setSaveUrlToTxt():
+    global current_txt_name
+    global is_save_url_to_txt
+    global is_edit_txt_info
+
+    os.system('mode con cols=50 lines=11')
+
+    while True:
+        print('< Set .txt file >')
+        print('[1] File name: %s'%current_txt_name)
+        print('[2] \'Save URL to .txt file\' mode: %s'%is_save_url_to_txt)
+        print('[3] EXIT')
+        user_input = input('= ')
+
+        if user_input == '1':
+            print('\nInput .txt file name')
+            user_custom_file_name = input('= ')
+            current_txt_name = str(user_custom_file_name)
+            is_edit_txt_info += 1
+            print('Now .txt file name: %s'%current_txt_name)
+            time.sleep(1.25)
+            os.system('cls')
+            continue
+        elif user_input == '2':
+            print('\nWhether to save the URL to a .txt file [y/n]')
+            user_input = input('= ')
+            try:
+                if user_input.lower() == 'y':
+                    is_save_url_to_txt = 'y'
+                    is_edit_txt_info += 1
+                    print('Complete. Now is \'%s\''%is_save_url_to_txt)
+                    time.sleep(1.25)
+                    os.system('cls')
+                    continue
+                elif user_input.lower() == 'n':
+                    is_save_url_to_txt = 'n'
+                    is_edit_txt_info += 1
+                    print('Complete. Now is \'%s\''%is_save_url_to_txt)
+                    time.sleep(1.25)
+                    os.system('cls')
+                    continue
+                else:
+                    print('[!] Please enter \'y\' or \'n\'! [!]')
+                    time.sleep(0.75)
+            except:
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.75)
+        elif user_input == '3':
+            return
+        else:
+            print('[!] Please enter a right number! [!]')
+            time.sleep(0.75)
+        os.system('cls')
+
+
+#by VDoring. 2021.07.05
+#Multi 모드에서 수집할 URL수를 설정할 수 있습니다.
+#매개변수: url_count=수집할 URL 개수
+#리턴값: 없음
+def setNeedUrlCount(url_count):
+    global current_need_url_count
+
+    try:
+        current_need_url_count = url_count
+        print('Complete. Now need URL count is %d'%current_need_url_count)
+        time.sleep(1.25)
+        return
+    except:
+        print('[!] ERROR [!]')
+        time.sleep(1.5)
+        return
+
 
 
 #by VDoring. 2021.07.05
@@ -105,7 +191,7 @@ def playImageRepeat(user_image_info):
 
 #by VDoring. 2021.07.05
 #사용자가 선택한 이미지 type과 category에 맞는 이미지를 출력합니다.
-#매개변수: user_image_type=사용자가 선택한 이미지의 type
+#매개변수: user_image_type=사용자가 선택한 이미지 type
 #          user_image_category=사용자가 선택한 이미지 category
 #리턴값: 없음
 def playImage(user_image_type, user_image_category):
