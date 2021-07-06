@@ -19,7 +19,7 @@ current_need_url_count = 60 #Multi 모드에서 몇장의 URL 개수가 필요�
 
 #by VDoring. 2021.07.05
 #com_API.py의 특정 변수의 값을 올립니다.
-#매개변수: val_name=값을 올릴 변수의 이름
+#매개변수: val_name=값을 올릴 변수를 나타내는 임의의 문장
 #리턴값: 없음
 def valApiCountUp(val_name):
     global is_run_browser_changed
@@ -170,31 +170,31 @@ def setNeedUrlCount(url_count):
 
 
 #by VDoring. 2021.07.05
-#사용자가 선택한 이미지 type과 category에 맞는 이미지를 연속으로 출력합니다.
+#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 연속으로 출력합니다.
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
-def playImageRepeat(user_image_info):
+def playSingleImageRepeat(user_image_info):
     os.system('mode con cols=40 lines=11')
     
     print('\n< if you want to stop, press Ctrl+C >')
     try:
         if user_image_info[:3] == 'SFW':
             while True:
-                playImage(user_image_info[:3], user_image_info[3:])
+                playSingleImage(user_image_info[:3], user_image_info[3:])
         elif user_image_info[:4] == 'NSFW':
             while True:
-                playImage(user_image_info[:4], user_image_info[4:])
+                playSingleImage(user_image_info[:4], user_image_info[4:])
 
     except KeyboardInterrupt:
         return
 
 
 #by VDoring. 2021.07.05
-#사용자가 선택한 이미지 type과 category에 맞는 이미지를 출력합니다.
+#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 출력합니다.
 #매개변수: user_image_type=사용자가 선택한 이미지 type
 #          user_image_category=사용자가 선택한 이미지 category
 #리턴값: 없음
-def playImage(user_image_type, user_image_category):
+def playSingleImage(user_image_type, user_image_category):
     global image_delay_time
     global current_run_browser_name
     global command_chrome_run
@@ -203,7 +203,7 @@ def playImage(user_image_type, user_image_category):
     image_url = 'https://api.waifu.pics/type/category'
     image_url = image_url.replace('type', user_image_type.lower())
     image_url = image_url.replace('category', user_image_category.lower())
-
+    
     res = requests.get(image_url) # 이미지 URL 구하는데 0.5초 걸린다
     image_url = res.text
     
@@ -213,3 +213,19 @@ def playImage(user_image_type, user_image_category):
         os.system(command_edge_run + image_url[8:-3])
 
     time.sleep(image_delay_time)
+
+
+#by VDoring. 2021.07.06
+#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 연속으로 출력합니다.
+#매개변수: user_image_info=사용자가 선택한 이미지 type과 category
+#리턴값: 없음
+def playMultiImageRepeat(user_image_info):
+    pass
+
+#by VDoring. 2021.07.06
+#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 출력합니다.
+#매개변수: user_image_type=사용자가 선택한 이미지 type
+#          user_image_category=사용자가 선택한 이미지 category
+#리턴값: 없음
+def playMultiImage(user_image_type, user_image_category):
+    pass
