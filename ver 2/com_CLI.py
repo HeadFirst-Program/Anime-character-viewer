@@ -203,12 +203,17 @@ def screenCategorySelect(user_image_type):
                 print('%s'%sfw_category_list[i-1])
             user_input = input('= ')
 
-            if user_input.isdigit():
-                return 'SFW' + sfw_category_list[int(user_input)-1]
-            else:
+            try:
+                if user_input.isdigit() & ((int(user_input) >= 1) & (int(user_input) <= len(sfw_category_list))):
+                    return 'SFW' + sfw_category_list[int(user_input)-1]
+                else:
+                    print('[!] Please enter a right number! [!]')
+                    time.sleep(0.75)
+            except:
                 print('[!] Please enter a right number! [!]')
                 time.sleep(0.75)
-                os.system('cls')
+            os.system('cls')
+
 
     elif user_image_type == 'NSFW':
         while True:
@@ -218,10 +223,14 @@ def screenCategorySelect(user_image_type):
                 print('%s'%nsfw_category_list[i-1])
             user_input = input('= ')
 
-            if user_input.isdigit():
-                return 'NSFW' + nsfw_category_list[int(user_input)-1]
-            else:
+            try:
+                if user_input.isdigit() & ((int(user_input) >= 1) & (int(user_input) <= len(nsfw_category_list))):
+                    return 'NSFW' + nsfw_category_list[int(user_input)-1]
+                else:
+                    print('[!] Please enter a right number! [!]')
+                    time.sleep(0.75)
+            except:
                 print('[!] Please enter a right number! [!]')
                 time.sleep(0.75)
-                os.system('cls')
+            os.system('cls')
 
