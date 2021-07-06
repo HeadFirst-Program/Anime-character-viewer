@@ -145,7 +145,7 @@ def screenMultiModeSetting():
 
             if user_input >= 1:
                 api.setNeedUrlCount(user_input)
-                return
+                break
             else:
                 print('[!] Please enter a right number! [!]')
                 time.sleep(0.75)
@@ -153,6 +153,30 @@ def screenMultiModeSetting():
             print('[!] Please enter a right number! [!]')
             time.sleep(0.75)
         os.system('cls')
+
+    os.system('cls')
+
+    if api.is_run_browser_changed == 0:
+        while True:
+            print('< Settings >\n')
+            print('Current web browser is %s'%api.current_run_browser_name.upper())
+            print('Do you want to change web browser? [y/n]')
+            user_input = input('= ')
+
+            try:
+                if user_input.lower() == 'y':
+                    api.setBrowser()
+                    return
+                elif user_input.lower() == 'n':
+                    api.valApiCountUp('browser_changed')
+                    return
+                else:
+                    print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.75)
+            except:
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.75)
+            os.system('cls')
 
 
 #by VDoring. 2021.07.05
