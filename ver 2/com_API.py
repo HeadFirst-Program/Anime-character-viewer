@@ -260,6 +260,8 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
     global command_chrome_run
     global command_edge_run
     
+    all_url_token_list = [] # 갱신된 모든 이미지의 URL을 저장
+
     for tens in range(repeat_tens+1):
         image_url = 'https://api.waifu.pics/many/type/category'
         image_url = image_url.replace('type', user_image_type.lower())
@@ -274,17 +276,59 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
         res_token_list = [] # 각각의 링크로 나눠진 것을 저장하는 리스트
         res_token_list = res_process_list.split(',') # ,를 기준으로 문자열을 나눠서 리스트에 저장
         
-        if current_run_browser_name == 'chrome':
+        all_url_token_list += res_token_list # 새로 생성된 링크들을 추가
+
+        if current_run_browser_name == 'chrome': # 현재 브라우저가 chrome일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_chrome_run + link)
             else:
                 for i in range(repeat_units):
                     os.system(command_chrome_run + res_token_list[i])
-        elif current_run_browser_name == 'edge':
+        elif current_run_browser_name == 'edge': # 현재 브라우저가 edge일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_edge_run + link)
             else:
                 for i in range(repeat_units):
                     os.system(command_edge_run + res_token_list[i])
+
+    if is_save_url_to_txt == 'y':
+        writeTxtFile(all_url_token_list, repeat_tens, repeat_units) # .txt파일에 이미지 URL 작성
+
+
+#by VDoring. 2021.07.06
+#이미지의 URL을 syslog.txt(시스템로그용)와 유저의 .txt파일에 저장합니다.
+#매개변수: all_url_list=(Multi play mode에서 생성된)모든 URL 리스트
+#          repeat_tens=이미지 URL 기록을 반복할 휫수. 1당 30개의 이미지 URL을 작성할 수 있음
+#          repeat_units=이미지 URL 기록을 반복할 휫수. 1당 1개의 이미지 URL을 작성할 수 있음
+#리턴값: 없음
+def writeTxtFile(all_url_list, repeat_tens, repeat_units):
+    global is_save_url_to_txt
+    global current_txt_name
+    global is_edit_txt_info
+
+    user_txt_name = current_txt_name + '.txt' # 사용자 지정 .txt 파일
+    sys_txt_name = 'syslog.txt' # 시스템 로그용 .txt 파일
+
+    url_write_count = (repeat_tens * 30) + repeat_units # 리스트에서 URL을 꺼내서 쓸 휫수
+
+# 사용자 .txt파일
+    if os.path.isfile(user_txt_name): # 사용자 .txt파일
+        f1 = open(user_txt_name, 'a') # 사용자 .txt파일 내용 추가 모드
+    else:
+        f1 = open(user_txt_name, 'w') # 사용자 .txt파일 새로(new) 작성 모드
+    for i in range(url_write_count):
+        data = all_url_list[i] + '\n'
+        f1.write(data)
+    f1.close()
+
+# 시스템 .txt파일
+    if os.path.isfile(sys_txt_name):
+        f2 = open(sys_txt_name, 'a') # 시스템 .txt파일 내용 추가 모드
+    else:
+        f2 = open(sys_txt_name, 'w') # 시스템 .txt파일 새로(new) 작성 모드
+    for i in range(url_write_count):
+        data = '[' + str(i+1) + ']  ' + all_url_list[i] + '\n'
+        f2.write(data)
+    f2.close()
