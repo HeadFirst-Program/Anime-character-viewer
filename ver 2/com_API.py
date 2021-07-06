@@ -220,12 +220,71 @@ def playSingleImage(user_image_type, user_image_category):
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
 def playMultiImageRepeat(user_image_info):
-    pass
+    global current_need_url_count
+
+    os.system('mode con cols=40 lines=11')
+
+    original_current_need_url_count = current_need_url_count # 값 복원을 위해 기존 변수 값 저장
+    repeat_tens = 0 # 전체 단위의 반복 휫수
+    repeat_units = 0 # 개별 단위의 반복 휫수
+    while True: # 사진 출력 반복 휫수 정하기
+        if current_need_url_count >= 30:
+            repeat_tens += 1
+            current_need_url_count -= 30
+        else:
+            repeat_units = current_need_url_count
+            break
+
+    print('\n< if you want to stop, press Ctrl+C >')
+    try:
+        if user_image_info[:3] == 'SFW':
+                playMultiImage(user_image_info[:3], user_image_info[3:], repeat_tens, repeat_units)
+        elif user_image_info[:4] == 'NSFW':
+                playMultiImage(user_image_info[:4], user_image_info[4:], repeat_tens, repeat_units)
+        current_need_url_count = original_current_need_url_count # 기존 값 복구
+
+    except KeyboardInterrupt:
+        current_need_url_count = original_current_need_url_count # 기존 값 복구
+        return
 
 #by VDoring. 2021.07.06
 #사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 출력합니다.
 #매개변수: user_image_type=사용자가 선택한 이미지 type
 #          user_image_category=사용자가 선택한 이미지 category
+#          repeat_tens=이미지 출력을 반복할 휫수. 1당 30개의 이미지 출력
+#          repeat_units=이미지 출력을 반복할 휫수. 1당 1개의 이미지 출력
 #리턴값: 없음
-def playMultiImage(user_image_type, user_image_category):
-    pass
+def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_units):
+    global image_delay_time
+    global current_run_browser_name
+    global command_chrome_run
+    global command_edge_run
+    
+    for tens in range(repeat_tens+1):
+        image_url = 'https://api.waifu.pics/many/type/category'
+        image_url = image_url.replace('type', user_image_type.lower())
+        image_url = image_url.replace('category', user_image_category.lower())
+        
+        data = {'param':''}
+        res_list = requests.post(image_url, data=data)
+        
+        res_process_list = res_list.text[10:-3] # 리스트를 만드는데 불필요한 부분 제거
+        res_process_list = res_process_list.replace('\"','') # " 를 제거
+
+        res_token_list = [] # 각각의 링크로 나눠진 것을 저장하는 리스트
+        res_token_list = res_process_list.split(',') # ,를 기준으로 문자열을 나눠서 리스트에 저장
+        
+        if current_run_browser_name == 'chrome':
+            if tens < repeat_tens:
+                for link in res_token_list:
+                    os.system(command_chrome_run + link)
+            else:
+                for i in range(repeat_units):
+                    os.system(command_chrome_run + res_token_list[i])
+        elif current_run_browser_name == 'edge':
+            if tens < repeat_tens:
+                for link in res_token_list:
+                    os.system(command_edge_run + link)
+            else:
+                for i in range(repeat_units):
+                    os.system(command_edge_run + res_token_list[i])
