@@ -8,10 +8,9 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0-Dev.1')
+        os.system('title ACv v2.0-Dev.5')
 
-        print('< Anime Character viewer >')
-        print('Select the image output type.\n')
+        print('< Anime Character viewer >\n')
         print('[1] Single play mode')
         print('[2] Multi play mode')
         print('[3] Settings')
@@ -29,17 +28,17 @@ def screenTitle():
 
 
 #by VDoring. 2021.07.05
-#환경설정을 할 수 있습니다
+#모든 환경설정 메뉴를 볼 수 있고, 그 설정값을 수정할 수 있습니다.
 #리턴값: 없음
 def screenSettings():
     while True:
         os.system('cls')
 
-        print('< Settings menu >')
+        print('< Settings menu >\n')
         print('[1] Image time delay')
         print('[2] Web browser')
         print('[3] .txt file')
-        print('[4] EXIT')
+        print('\n[9] EXIT')
         user_input = input('= ')
 
         if user_input == '1':
@@ -48,7 +47,7 @@ def screenSettings():
             api.setBrowser()
         elif user_input == '3':
             api.setSaveUrlToTxt()
-        elif user_input == '4':
+        elif user_input == '9':
             return
         else:
             print('[!] Please enter a right number! [!]')
@@ -56,6 +55,7 @@ def screenSettings():
 
 #by VDoring. 2021.07.05
 #사진 단일 출력 모드의 지연시간과 브라우저를 설정
+#Single play mode시 다음 사진 출력까지의 지연시간과 사용할 웹 브라우저를 설정합니다. 이때 웹 브라우저는 최초 실행시에만 설정창이 나옵니다.
 #리턴값: 없음
 def screenSingleModeSetting():
     os.system('mode con cols=50 lines=11')
@@ -82,7 +82,7 @@ def screenSingleModeSetting():
 
     os.system('cls')
 
-    if api.is_run_browser_changed == 0:
+    if api.is_edit_browser_name == 0:
         while True:
             print('< Settings >\n')
             print('Current web browser is %s'%api.current_run_browser_name.upper())
@@ -106,7 +106,8 @@ def screenSingleModeSetting():
     
 
 #by VDoring. 2021.07.05
-#사진 다중 출력 모드의 세부옵션을 출력하고 선택하게 합니다.
+#Multi play mode일시 .txt 파일 이름과 저장여부, 몇개의 URL이 필요한지 설정하며, 사용할 웹 브라우저를 설정합니다.
+#                                                        이때 .txt파일 설정은 최초 실행시에만 설정창이 나옵니다.
 #리턴값: 없음
 def screenMultiModeSetting():
     os.system('mode con cols=50 lines=11')
@@ -156,7 +157,7 @@ def screenMultiModeSetting():
 
     os.system('cls')
 
-    if api.is_run_browser_changed == 0:
+    if api.is_edit_browser_name == 0:
         while True:
             print('< Settings >\n')
             print('Current web browser is %s'%api.current_run_browser_name.upper())
@@ -180,17 +181,17 @@ def screenMultiModeSetting():
 
 
 #by VDoring. 2021.07.05
-#SFW와 NSFW중 선택합니다.
+#사용자가 볼 Image type을 설정합니다.
 #리턴값: SFW, NSFW
 def screenTypeSelect():
     os.system('mode con cols=40 lines=11')
 
     while True:
-        print('< Select type >')
+        print('< Select type >\n')
         print('[1] SFW')
         print('[2] NSFW')
         user_input = input('= ')
-
+        
         if user_input == '1':
             return 'SFW'
         elif user_input == '2':
@@ -203,14 +204,14 @@ def screenTypeSelect():
 
 
 #by VDoring. 2021.07.05
-#SFW와 NSFW에 속해있는 카테고리를 선택합니다.
+#Image type에 속해있는 category를 사용자가 설정합니다.
 #매개변수: user_image_type=사용자가 선택한 이미지 type
 #리턴값: SFW/NSFW + 'waifu', 'neko', 'shinobu', 'megumin', 'bully', 'cuddle', 'cry', 'hug',
 #                   'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet', 'blush', 'smile',
 #                   'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill',
 #                   'kick', 'happy', 'wink', 'poke', 'dance', 'cringe', 'trap', 'blowjob'
 def screenCategorySelect(user_image_type):
-    os.system('mode con cols=40 lines=38')
+    os.system('mode con cols=40 lines=36')
 
     sfw_category_list = ('waifu', 'neko', 'shinobu', 'megumin', 'bully', 'cuddle', 'cry', 'hug',
                     'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet', 'blush', 'smile',
@@ -221,7 +222,7 @@ def screenCategorySelect(user_image_type):
 
     if user_image_type == 'SFW' :
         while True:
-            print('< Select SFW category >')
+            print('< Select SFW category >\n')
             for i in range(1,len(sfw_category_list)+1):
                 print('[%d] '%i, end='')
                 print('%s'%sfw_category_list[i-1])
@@ -241,7 +242,7 @@ def screenCategorySelect(user_image_type):
 
     elif user_image_type == 'NSFW':
         while True:
-            print('< Select NSFW category >')
+            print('< Select NSFW category >\n')
             for i in range(1,len(nsfw_category_list)+1):
                 print('[%d] '%i, end='')
                 print('%s'%nsfw_category_list[i-1])
