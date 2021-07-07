@@ -2,37 +2,37 @@ import requests
 import time
 import os
 
-image_delay_time = 2.0 # 다음 사진을 보여주기까지의 지연시간
+image_delay_time = 2.0 # Single play mode에서 다음 사진을 보여주기까지의 지연시간
 
 command_chrome_run = 'start chrome -incognito ' # 크롬 시크릿모드 실행 명령어
 command_edge_run = 'start msedge -inprivate ' # 엣지 시크릿모드 실행 명령어
 
-current_run_browser_name = 'edge' # 현재 사용설정된 브라우저
-is_run_browser_changed = 0 # 사용자가 브라우저 설정여부를 본 휫수
+current_run_browser_name = 'edge' # 현재 사용 설정된 웹 브라우저 이름
+is_edit_browser_name = 0 # 사용자가 웹 브라우저 설정 창을 본 휫수(설정 시도 휫수)
 
-is_save_url_to_txt = 'y' # 현재 URL을 txt파일에 저장하는지에 대한 여부
-current_txt_name = 'URLlist' # URL을 저장하는 txt파일의 이름
-is_edit_txt_info = 0 # 사용자가 .txt파일 설정여부를 본 휫수
+is_save_url_to_txt = 'y' # URL을 .txt파일에 저장할 것인지에 대한 여부
+current_txt_name = 'URLlist' # 사용자 지정 .txt 파일의 이름
+is_edit_txt_info = 0 # 사용자가 .txt파일 설정 창을 본 휫수(설정 시도 휫수)
 
 current_need_url_count = 60 #Multi 모드에서 몇장의 URL 개수가 필요한지 저장
-
+original_current_need_url_count = 0 # current_need_url_count 변수 값 백업
 
 #by VDoring. 2021.07.05
 #com_API.py의 특정 변수의 값을 올립니다.
 #매개변수: val_name=값을 올릴 변수를 나타내는 임의의 문장
 #리턴값: 없음
 def valApiCountUp(val_name):
-    global is_run_browser_changed
+    global is_edit_browser_name
     global is_edit_txt_info
 
     if val_name == 'browser_changed':
-        is_run_browser_changed += 1
+        is_edit_browser_name += 1
     elif val_name == 'txt_info_changed':
         is_edit_txt_info += 1
 
 
 #by VDoring. 2021.07.05
-#사진 전환시 지연 시간을 조정합니다.
+#Single play mode에서 사진 전환시 지연 시간을 조정합니다.
 #리턴값: 없음
 def setDelayTime():
     global image_delay_time
@@ -40,7 +40,7 @@ def setDelayTime():
     os.system('mode con cols=50 lines=11')
 
     while True:
-        print('< Set image delay time >')
+        print('< Set image delay time >\n')
         print('unit of time: Seconds(0, 1, 2, 1.5, 2.5, etc..)')
         print('Current delay time: %f seconds'%image_delay_time)
         try:
@@ -48,7 +48,7 @@ def setDelayTime():
 
             if user_input >= 0:
                 image_delay_time = user_input
-                print('Complete. Now delay time is %f seconds.'%image_delay_time)
+                print('\nComplete. Now delay time is %f seconds.'%image_delay_time)
                 time.sleep(1.25)
                 return
         except:
@@ -59,31 +59,30 @@ def setDelayTime():
 
 
 #by VDoring. 2021.07.05
-#사용할 브라우저를 설정합니다.
+#사용할 웹 브라우저를 설정합니다.
 #리턴값: 없음
 def setBrowser():
     global current_run_browser_name
-    global is_run_browser_changed
+    global is_edit_browser_name
 
     os.system('mode con cols=50 lines=11')
 
     while True:
-        print('< Set web browser >')
-        print('Browser list: chrome, edge')
+        print('< Set web browser >\n')
         print('Current web browser: %s'%current_run_browser_name)
-        print('\ninput \'chrome\' or \'edge\'.')
+        print('input \'chrome\' or \'edge\'.')
         user_input = input('= ')
 
         if user_input.lower() == 'chrome':
             current_run_browser_name = 'chrome'
-            is_run_browser_changed += 1
-            print('Complete. Now browser is %s.'%current_run_browser_name.upper())
+            is_edit_browser_name += 1
+            print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
             time.sleep(1.25)
             return
         elif user_input.lower() == 'edge':
             current_run_browser_name = 'edge'
-            is_run_browser_changed += 1
-            print('Complete. Now browser is %s.'%current_run_browser_name.upper())
+            is_edit_browser_name += 1
+            print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
             time.sleep(1.25)
             return
         else:
@@ -93,7 +92,7 @@ def setBrowser():
 
 
 #by VDoring. 2021.07.05
-#.txt 파일의 이름을 설정하고, URL을 .txt파일에 저장할지에 대한 여부를 설정할 수 있습니다.
+#사용자 지정 .txt 파일의 이름을 설정하고, URL을 .txt파일에 저장할지에 대한 여부를 설정합니다.
 #리턴값: 없음
 def setSaveUrlToTxt():
     global current_txt_name
@@ -103,36 +102,36 @@ def setSaveUrlToTxt():
     os.system('mode con cols=50 lines=11')
 
     while True:
-        print('< Set .txt file >')
+        print('< Set .txt file >\n')
         print('[1] File name: %s'%current_txt_name)
-        print('[2] \'Save URL to .txt file\' mode: %s'%is_save_url_to_txt)
-        print('[3] EXIT')
+        print('[2] Save URL to .txt file: %s'%is_save_url_to_txt)
+        print('\n[9] EXIT')
         user_input = input('= ')
 
         if user_input == '1':
-            print('\nInput .txt file name')
+            print('\nInput .txt file name.')
             user_custom_file_name = input('= ')
             current_txt_name = str(user_custom_file_name)
             is_edit_txt_info += 1
-            print('Now .txt file name: %s'%current_txt_name)
+            print('\nNow .txt file name: %s'%current_txt_name)
             time.sleep(1.25)
             os.system('cls')
             continue
         elif user_input == '2':
-            print('\nWhether to save the URL to a .txt file [y/n]')
+            print('\nWhether to save the URL to a .txt file. [y/n]')
             user_input = input('= ')
             try:
                 if user_input.lower() == 'y':
                     is_save_url_to_txt = 'y'
                     is_edit_txt_info += 1
-                    print('Complete. Now is \'%s\''%is_save_url_to_txt)
+                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
                     time.sleep(1.25)
                     os.system('cls')
                     continue
                 elif user_input.lower() == 'n':
                     is_save_url_to_txt = 'n'
                     is_edit_txt_info += 1
-                    print('Complete. Now is \'%s\''%is_save_url_to_txt)
+                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
                     time.sleep(1.25)
                     os.system('cls')
                     continue
@@ -142,7 +141,7 @@ def setSaveUrlToTxt():
             except:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
                 time.sleep(0.75)
-        elif user_input == '3':
+        elif user_input == '9':
             return
         else:
             print('[!] Please enter a right number! [!]')
@@ -151,7 +150,7 @@ def setSaveUrlToTxt():
 
 
 #by VDoring. 2021.07.05
-#Multi 모드에서 수집할 URL수를 설정할 수 있습니다.
+#Multi play mode에서 수집할 URL수를 설정할 수 있습니다.
 #매개변수: url_count=수집할 URL 개수
 #리턴값: 없음
 def setNeedUrlCount(url_count):
@@ -159,7 +158,7 @@ def setNeedUrlCount(url_count):
 
     try:
         current_need_url_count = url_count
-        print('Complete. Now need URL count is %d'%current_need_url_count)
+        print('\nComplete. Now need URL count is %d'%current_need_url_count)
         time.sleep(1.25)
         return
     except:
@@ -174,15 +173,21 @@ def setNeedUrlCount(url_count):
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
 def playSingleImageRepeat(user_image_info):
-    os.system('mode con cols=40 lines=11')
+    os.system('mode con cols=50 lines=11')
     
+    cnt = 0
     print('\n< if you want to stop, press Ctrl+C >')
+
     try:
         if user_image_info[:3] == 'SFW':
             while True:
+                cnt += 1
+                os.system('title Single mode playing.. ' + '[' + str(cnt) + ']')
                 playSingleImage(user_image_info[:3], user_image_info[3:])
         elif user_image_info[:4] == 'NSFW':
             while True:
+                cnt += 1
+                os.system('title Single mode playing.. ' + '[' + str(cnt) + ']')
                 playSingleImage(user_image_info[:4], user_image_info[4:])
 
     except KeyboardInterrupt:
@@ -200,19 +205,19 @@ def playSingleImage(user_image_type, user_image_category):
     global command_chrome_run
     global command_edge_run
     
-    image_url = 'https://api.waifu.pics/type/category'
-    image_url = image_url.replace('type', user_image_type.lower())
-    image_url = image_url.replace('category', user_image_category.lower())
+    image_url = 'https://api.waifu.pics/type/category' # API 원본 링크
+    image_url = image_url.replace('type', user_image_type.lower()) # type를 사용자가 원하는 type 이름으로 교체
+    image_url = image_url.replace('category', user_image_category.lower()) # category를 사용자가 원하는 category 이름으로 교체
     
-    res = requests.get(image_url) # 이미지 URL 구하는데 0.5초 걸린다
-    image_url = res.text
+    res = requests.get(image_url) # (이미지 URL 구하는데 약 0.5초 소요)
+    image_url = res.text # API에서 받은 값을 text부분만 가지기
     
     if current_run_browser_name == 'chrome':
-        os.system(command_chrome_run + image_url[8:-3])
+        os.system(command_chrome_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
     elif current_run_browser_name == 'edge':
-        os.system(command_edge_run + image_url[8:-3])
+        os.system(command_edge_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
 
-    time.sleep(image_delay_time)
+    time.sleep(image_delay_time) # 사용자가 설정한 지연시간
 
 
 #by VDoring. 2021.07.06
@@ -221,17 +226,19 @@ def playSingleImage(user_image_type, user_image_category):
 #리턴값: 없음
 def playMultiImageRepeat(user_image_info):
     global current_need_url_count
+    global original_current_need_url_count
 
-    os.system('mode con cols=40 lines=11')
+    os.system('mode con cols=50 lines=11')
 
-    original_current_need_url_count = current_need_url_count # 값 복원을 위해 기존 변수 값 저장
-    repeat_tens = 0 # 전체 단위의 반복 휫수
-    repeat_units = 0 # 개별 단위의 반복 휫수
+    original_current_need_url_count = current_need_url_count # 기존 변수 값 복원을 위해 따로 값을 저장
+    repeat_tens = 0 # 전체 단위의 반복 휫수. 1당 이미지 30개를 담당.
+    repeat_units = 0 # 개별 단위의 반복 휫수. 1당 이미지 1개를 담당.
+
     while True: # 사진 출력 반복 휫수 정하기
-        if current_need_url_count >= 30:
+        if current_need_url_count >= 30: # 만약 사용자가 원하는 URL 개수가 30개 이상이라면
             repeat_tens += 1
             current_need_url_count -= 30
-        else:
+        else: # 만약 사용자가 원하는 URL 개수가 30개 이하라면
             repeat_units = current_need_url_count
             break
 
@@ -255,12 +262,13 @@ def playMultiImageRepeat(user_image_info):
 #          repeat_units=이미지 출력을 반복할 휫수. 1당 1개의 이미지 출력
 #리턴값: 없음
 def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_units):
-    global image_delay_time
+    global original_current_need_url_count
     global current_run_browser_name
     global command_chrome_run
     global command_edge_run
     
     all_url_token_list = [] # 갱신된 모든 이미지의 URL을 저장
+    cnt = 0
 
     for tens in range(repeat_tens+1):
         image_url = 'https://api.waifu.pics/many/type/category'
@@ -282,19 +290,26 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_chrome_run + link)
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
             else:
                 for i in range(repeat_units):
                     os.system(command_chrome_run + res_token_list[i])
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
         elif current_run_browser_name == 'edge': # 현재 브라우저가 edge일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_edge_run + link)
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
             else:
                 for i in range(repeat_units):
                     os.system(command_edge_run + res_token_list[i])
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
 
-    if is_save_url_to_txt == 'y':
-        writeTxtFile(all_url_token_list, repeat_tens, repeat_units) # .txt파일에 이미지 URL 작성
+    writeTxtFile(all_url_token_list, repeat_tens, repeat_units) # .txt파일에 이미지 URL 작성
 
 
 #by VDoring. 2021.07.06
@@ -314,14 +329,15 @@ def writeTxtFile(all_url_list, repeat_tens, repeat_units):
     url_write_count = (repeat_tens * 30) + repeat_units # 리스트에서 URL을 꺼내서 쓸 휫수
 
 # 사용자 .txt파일
-    if os.path.isfile(user_txt_name): # 사용자 .txt파일
-        f1 = open(user_txt_name, 'a') # 사용자 .txt파일 내용 추가 모드
-    else:
-        f1 = open(user_txt_name, 'w') # 사용자 .txt파일 새로(new) 작성 모드
-    for i in range(url_write_count):
-        data = all_url_list[i] + '\n'
-        f1.write(data)
-    f1.close()
+    if is_save_url_to_txt == 'y':
+        if os.path.isfile(user_txt_name): # 사용자 .txt파일
+            f1 = open(user_txt_name, 'a') # 사용자 .txt파일 내용 추가 모드
+        else:
+            f1 = open(user_txt_name, 'w') # 사용자 .txt파일 새로(new) 작성 모드
+        for i in range(url_write_count):
+            data = all_url_list[i] + '\n'
+            f1.write(data)
+        f1.close()
 
 # 시스템 .txt파일
     if os.path.isfile(sys_txt_name):
