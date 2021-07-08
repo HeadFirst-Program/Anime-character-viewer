@@ -7,10 +7,11 @@ image_delay_time = 2.0 # Single play mode에서 다음 사진을 보여주기까
 command_chrome_run = 'start chrome -incognito ' # 크롬 시크릿모드 실행 명령어
 command_edge_run = 'start msedge -inprivate ' # 엣지 시크릿모드 실행 명령어
 
-current_run_browser_name = 'edge' # 현재 사용 설정된 웹 브라우저 이름
+current_run_browser_name = 'chrome' # 현재 사용 설정된 웹 브라우저 이름
 is_edit_browser_name = 0 # 사용자가 웹 브라우저 설정 창을 본 휫수(설정 시도 휫수)
 
 is_save_url_to_txt = 'y' # URL을 .txt파일에 저장할 것인지에 대한 여부
+is_save_url_to_txt_syslog = 'y' # URL을 syslog.txt에 저장할 것인지에 대한 여부
 current_txt_name = 'URLlist' # 사용자 지정 .txt 파일의 이름
 is_edit_txt_info = 0 # 사용자가 .txt파일 설정 창을 본 휫수(설정 시도 휫수)
 
@@ -49,11 +50,11 @@ def setDelayTime():
             if user_input >= 0:
                 image_delay_time = user_input
                 print('\nComplete. Now delay time is %f seconds.'%image_delay_time)
-                time.sleep(1.25)
+                time.sleep(1.15)
                 return
         except:
             print('[!] Please enter a number! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
             os.system('cls')
 
 
@@ -77,17 +78,17 @@ def setBrowser():
             current_run_browser_name = 'chrome'
             is_edit_browser_name += 1
             print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
-            time.sleep(1.25)
+            time.sleep(1.15)
             return
         elif user_input.lower() == 'edge':
             current_run_browser_name = 'edge'
             is_edit_browser_name += 1
             print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
-            time.sleep(1.25)
+            time.sleep(1.15)
             return
         else:
             print('[!] Please correct enter a string! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
             os.system('cls')
 
 
@@ -97,14 +98,16 @@ def setBrowser():
 def setSaveUrlToTxt():
     global current_txt_name
     global is_save_url_to_txt
+    global is_save_url_to_txt_syslog
     global is_edit_txt_info
 
-    os.system('mode con cols=50 lines=11')
+    os.system('mode con cols=50 lines=15')
 
     while True:
         print('< Set .txt file >\n')
         print('[1] File name: %s'%current_txt_name)
-        print('[2] Save URL to .txt file: %s'%is_save_url_to_txt)
+        print('[2] Save URL to (user).txt file: %s'%is_save_url_to_txt)
+        print('[3] Save URL to syslog.txt file: %s'%is_save_url_to_txt_syslog)
         print('\n[9] EXIT')
         user_input = input('= ')
 
@@ -114,57 +117,94 @@ def setSaveUrlToTxt():
             current_txt_name = str(user_custom_file_name)
             is_edit_txt_info += 1
             print('\nNow .txt file name: %s'%current_txt_name)
-            time.sleep(1.25)
+            time.sleep(1.15)
             os.system('cls')
             continue
         elif user_input == '2':
-            print('\nWhether to save the URL to a .txt file. [y/n]')
+            print('\nWhether to save the URL to a .txt file [y/n]')
             user_input = input('= ')
             try:
                 if user_input.lower() == 'y':
                     is_save_url_to_txt = 'y'
                     is_edit_txt_info += 1
                     print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
-                    time.sleep(1.25)
+                    time.sleep(1.15)
                     os.system('cls')
                     continue
                 elif user_input.lower() == 'n':
                     is_save_url_to_txt = 'n'
                     is_edit_txt_info += 1
                     print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
-                    time.sleep(1.25)
+                    time.sleep(1.15)
                     os.system('cls')
                     continue
                 else:
                     print('[!] Please enter \'y\' or \'n\'! [!]')
-                    time.sleep(0.75)
+                    time.sleep(0.7)
             except:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
+        elif user_input == '3':
+            print('\nWhether to save the URL to a syslog.txt file [y/n]')
+            user_input = input('= ')
+            try:
+                if user_input.lower() == 'y':
+                    is_save_url_to_txt_syslog = 'y'
+                    is_edit_txt_info += 1
+                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt_syslog)
+                    time.sleep(1.15)
+                    os.system('cls')
+                    continue
+                elif user_input.lower() == 'n':
+                    is_save_url_to_txt_syslog = 'n'
+                    is_edit_txt_info += 1
+                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt_syslog)
+                    time.sleep(1.15)
+                    os.system('cls')
+                    continue
+                else:
+                    print('[!] Please enter \'y\' or \'n\'! [!]')
+                    time.sleep(0.7)
+            except:
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.7)
         elif user_input == '9':
             return
         else:
             print('[!] Please enter a right number! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
         os.system('cls')
 
 
 #by VDoring. 2021.07.05
 #Multi play mode에서 수집할 URL수를 설정할 수 있습니다.
-#매개변수: url_count=수집할 URL 개수
 #리턴값: 없음
-def setNeedUrlCount(url_count):
+def setNeedUrlCount():
     global current_need_url_count
 
-    try:
-        current_need_url_count = url_count
-        print('\nComplete. Now need URL count is %d'%current_need_url_count)
-        time.sleep(1.25)
-        return
-    except:
-        print('[!] ERROR [!]')
-        time.sleep(1.5)
-        return
+    os.system('mode con cols=50 lines=11')
+
+    while True:
+        print('< Set URL play count >\n')
+        print('How many URLs do you need?')
+        print('Current: %d'%current_need_url_count)
+
+        try:
+            user_input = int(input('= '))
+
+            if user_input >= 1:
+                current_need_url_count = user_input
+                print('\nComplete. Now need URL count is %d'%current_need_url_count)
+                time.sleep(1.15)
+                return
+            else:
+                print('[!] Please enter a right number! [!]')
+                time.sleep(0.7)
+                os.system('cls')
+        except:
+            print('[!] Please enter a right number! [!]')
+            time.sleep(0.7)
+        os.system('cls')
 
 
 
@@ -178,6 +218,8 @@ def playSingleImageRepeat(user_image_info):
     cnt = 0
     print('\n< if you want to stop, press Ctrl+C >')
 
+    if user_image_info == 'EXIT':
+        return
     try:
         if user_image_info[:3] == 'SFW':
             while True:
@@ -225,6 +267,9 @@ def playSingleImage(user_image_type, user_image_category):
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
 def playMultiImageRepeat(user_image_info):
+    if user_image_info == 'EXIT':
+        return
+
     global current_need_url_count
     global original_current_need_url_count
 
@@ -320,6 +365,7 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
 #리턴값: 없음
 def writeTxtFile(all_url_list, repeat_tens, repeat_units):
     global is_save_url_to_txt
+    global is_save_url_to_txt_syslog
     global current_txt_name
     global is_edit_txt_info
 
@@ -340,11 +386,13 @@ def writeTxtFile(all_url_list, repeat_tens, repeat_units):
         f1.close()
 
 # 시스템 .txt파일
-    if os.path.isfile(sys_txt_name):
-        f2 = open(sys_txt_name, 'a') # 시스템 .txt파일 내용 추가 모드
-    else:
-        f2 = open(sys_txt_name, 'w') # 시스템 .txt파일 새로(new) 작성 모드
-    for i in range(url_write_count):
-        data = '[' + str(i+1) + ']  ' + all_url_list[i] + '\n'
-        f2.write(data)
-    f2.close()
+
+    if is_save_url_to_txt_syslog == 'y':
+        if os.path.isfile(sys_txt_name):
+            f2 = open(sys_txt_name, 'a') # 시스템 .txt파일 내용 추가 모드
+        else:
+            f2 = open(sys_txt_name, 'w') # 시스템 .txt파일 새로(new) 작성 모드
+        for i in range(url_write_count):
+            data = '[' + str(i+1) + ']  ' + all_url_list[i] + '\n'
+            f2.write(data)
+        f2.close()
