@@ -8,12 +8,13 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0-Dev.5')
+        os.system('title ACv v2.0')
 
-        print('< Anime Character viewer >\n')
-        print('[1] Single play mode')
-        print('[2] Multi play mode')
-        print('[3] Settings')
+        print('     < < Anime Character viewer > >')
+        print('           v2.0 - by VDoring \n')
+        print('[1] Single play')
+        print('[2] Multi play')
+        print('[3] Settings\n')
         user_input = input('= ')
 
         if user_input == '1':
@@ -24,7 +25,7 @@ def screenTitle():
             return 3
         else:
             print('[!] Please enter a right number! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
 
 
 #by VDoring. 2021.07.05
@@ -51,7 +52,7 @@ def screenSettings():
             return
         else:
             print('[!] Please enter a right number! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
 
 #by VDoring. 2021.07.05
 #사진 단일 출력 모드의 지연시간과 브라우저를 설정
@@ -74,10 +75,10 @@ def screenSingleModeSetting():
                 break
             else:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
         except:
             print('[!] Please enter \'y\' or \'n\'! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
         os.system('cls')
 
     os.system('cls')
@@ -98,14 +99,14 @@ def screenSingleModeSetting():
                     return
                 else:
                     print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             except:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             os.system('cls')
     
 
-#by VDoring. 2021.07.05
+#by VDoring. 2021.07.06
 #Multi play mode일시 .txt 파일 이름과 저장여부, 몇개의 URL이 필요한지 설정하며, 사용할 웹 브라우저를 설정합니다.
 #                                                        이때 .txt파일 설정은 최초 실행시에만 설정창이 나옵니다.
 #리턴값: 없음
@@ -129,32 +130,34 @@ def screenMultiModeSetting():
                     break
                 else:
                     print('[!] Please enter \'y\' or \'n\'! [!]')
-                    time.sleep(0.75)
+                    time.sleep(0.7)
             except:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             os.system('cls')
 
     os.system('cls')
 
     while True:
         print('< Settings >\n')
-        print('How many URLs do you need?')
-        print('Current: %d'%api.current_need_url_count)
-        try:
-            user_input = int(input('= '))
+        print('Current URL output count: %d'%api.current_need_url_count)
+        print('Would you like to correct the count? [y/n]')
+        user_input = input('= ')
 
-            if user_input >= 1:
-                api.setNeedUrlCount(user_input)
+        try:
+            if user_input.lower() == 'y':
+                api.setNeedUrlCount()
+                break
+            elif user_input.lower() == 'n':
                 break
             else:
-                print('[!] Please enter a right number! [!]')
-                time.sleep(0.75)
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+            time.sleep(0.7)
         except:
-            print('[!] Please enter a right number! [!]')
-            time.sleep(0.75)
+            print('[!] Please enter \'y\' or \'n\'! [!]')
+            time.sleep(0.7)
         os.system('cls')
-
+        
     os.system('cls')
 
     if api.is_edit_browser_name == 0:
@@ -173,10 +176,10 @@ def screenMultiModeSetting():
                     return
                 else:
                     print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             except:
                 print('[!] Please enter \'y\' or \'n\'! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             os.system('cls')
 
 
@@ -190,15 +193,18 @@ def screenTypeSelect():
         print('< Select type >\n')
         print('[1] SFW')
         print('[2] NSFW')
+        print('\n[9] EXIT\n')
         user_input = input('= ')
         
         if user_input == '1':
             return 'SFW'
         elif user_input == '2':
             return 'NSFW'
+        elif user_input == '9':
+            return 'EXIT'
         else:
             print('[!] Please enter a right number! [!]')
-            time.sleep(0.75)
+            time.sleep(0.7)
             os.system('cls')
 
 
@@ -211,6 +217,9 @@ def screenTypeSelect():
 #                   'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill',
 #                   'kick', 'happy', 'wink', 'poke', 'dance', 'cringe', 'trap', 'blowjob'
 def screenCategorySelect(user_image_type):
+    if user_image_type == 'EXIT':
+        return 'EXIT'
+
     os.system('mode con cols=40 lines=36')
 
     sfw_category_list = ('waifu', 'neko', 'shinobu', 'megumin', 'bully', 'cuddle', 'cry', 'hug',
@@ -233,13 +242,11 @@ def screenCategorySelect(user_image_type):
                     return 'SFW' + sfw_category_list[int(user_input)-1]
                 else:
                     print('[!] Please enter a right number! [!]')
-                    time.sleep(0.75)
+                    time.sleep(0.7)
             except:
                 print('[!] Please enter a right number! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             os.system('cls')
-
-
     elif user_image_type == 'NSFW':
         while True:
             print('< Select NSFW category >\n')
@@ -253,9 +260,8 @@ def screenCategorySelect(user_image_type):
                     return 'NSFW' + nsfw_category_list[int(user_input)-1]
                 else:
                     print('[!] Please enter a right number! [!]')
-                    time.sleep(0.75)
+                    time.sleep(0.7)
             except:
                 print('[!] Please enter a right number! [!]')
-                time.sleep(0.75)
+                time.sleep(0.7)
             os.system('cls')
-
