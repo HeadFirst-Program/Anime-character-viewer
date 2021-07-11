@@ -8,10 +8,10 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0')
+        os.system('title ACv v2.0.1')
 
         print('     < < Anime Character viewer > >')
-        print('           v2.0 - by VDoring \n')
+        print('          v2.0.1 - by VDoring \n')
         print('[1] Single play')
         print('[2] Multi play')
         print('[3] Settings\n')
@@ -35,10 +35,10 @@ def screenSettings():
     while True:
         os.system('cls')
 
-        print('< Settings menu >\n')
+        print('< Settings >\n')
         print('[1] Image time delay')
-        print('[2] Web browser')
-        print('[3] .txt file')
+        print('[2] Kinds of web browser')
+        print('[3] .txt file info')
         print('\n[9] EXIT')
         user_input = input('= ')
 
@@ -86,7 +86,7 @@ def screenSingleModeSetting():
     if api.is_edit_browser_name == 0:
         while True:
             print('< Settings >\n')
-            print('Current web browser is %s'%api.current_run_browser_name.upper())
+            print('Current web browser: %s'%api.current_run_browser_name)
             print('Do you want to change web browser? [y/n]')
             user_input = input('= ')
 
@@ -117,7 +117,7 @@ def screenMultiModeSetting():
         while True:
             print('< Settings >\n')
             print('Current .txt file name: %s'%api.current_txt_name)
-            print('Current \'save URL to .txt file\' mode: %s'%api.is_save_url_to_txt)
+            print('        save URL to .txt file: %s'%api.is_save_url_to_txt)
             print('\nDo you want to enter .txt file settings? [y/n]')
             user_input = input('= ')
 
@@ -163,7 +163,7 @@ def screenMultiModeSetting():
     if api.is_edit_browser_name == 0:
         while True:
             print('< Settings >\n')
-            print('Current web browser is %s'%api.current_run_browser_name.upper())
+            print('Current web browser: %s'%api.current_run_browser_name)
             print('Do you want to change web browser? [y/n]')
             user_input = input('= ')
 
@@ -190,7 +190,7 @@ def screenTypeSelect():
     os.system('mode con cols=40 lines=11')
 
     while True:
-        print('< Select type >\n')
+        print('< Select image type >\n')
         print('[1] SFW')
         print('[2] NSFW')
         print('\n[9] EXIT\n')
