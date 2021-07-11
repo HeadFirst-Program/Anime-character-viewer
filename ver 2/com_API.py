@@ -49,7 +49,7 @@ def setDelayTime():
 
             if user_input >= 0:
                 image_delay_time = user_input
-                print('\nComplete. Now delay time is %f seconds.'%image_delay_time)
+                print('\nComplete. \nNow delay time: %f seconds.'%image_delay_time)
                 time.sleep(1.15)
                 return
         except:
@@ -77,13 +77,13 @@ def setBrowser():
         if user_input.lower() == 'chrome':
             current_run_browser_name = 'chrome'
             is_edit_browser_name += 1
-            print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
+            print('\nComplete. \nNow web browser: %s.'%current_run_browser_name.upper())
             time.sleep(1.15)
             return
         elif user_input.lower() == 'edge':
             current_run_browser_name = 'edge'
             is_edit_browser_name += 1
-            print('\nComplete. Now browser is %s.'%current_run_browser_name.upper())
+            print('\nComplete. \nNow web browser is %s.'%current_run_browser_name.upper())
             time.sleep(1.15)
             return
         else:
@@ -105,36 +105,36 @@ def setSaveUrlToTxt():
 
     while True:
         print('< Set .txt file >\n')
-        print('[1] File name: %s'%current_txt_name)
-        print('[2] Save URL to (user).txt file: %s'%is_save_url_to_txt)
-        print('[3] Save URL to syslog.txt file: %s'%is_save_url_to_txt_syslog)
+        print('[1] Current (user).txt file name: %s'%current_txt_name)
+        print('[2] Current save URL to (user).txt file: %s'%is_save_url_to_txt)
+        print('[3] Current save URL to syslog.txt file: %s'%is_save_url_to_txt_syslog)
         print('\n[9] EXIT')
         user_input = input('= ')
 
         if user_input == '1':
-            print('\nInput .txt file name.')
+            print('\nInput (user).txt file name.')
             user_custom_file_name = input('= ')
             current_txt_name = str(user_custom_file_name)
             is_edit_txt_info += 1
-            print('\nNow .txt file name: %s'%current_txt_name)
+            print('\nNow (user).txt file name: %s'%current_txt_name)
             time.sleep(1.15)
             os.system('cls')
             continue
         elif user_input == '2':
-            print('\nWhether to save the URL to a .txt file [y/n]')
+            print('\nWhether to save the URL to a (user).txt file [y/n]')
             user_input = input('= ')
             try:
                 if user_input.lower() == 'y':
                     is_save_url_to_txt = 'y'
                     is_edit_txt_info += 1
-                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_url_to_txt)
                     time.sleep(1.15)
                     os.system('cls')
                     continue
                 elif user_input.lower() == 'n':
                     is_save_url_to_txt = 'n'
                     is_edit_txt_info += 1
-                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt)
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_url_to_txt)
                     time.sleep(1.15)
                     os.system('cls')
                     continue
@@ -151,14 +151,14 @@ def setSaveUrlToTxt():
                 if user_input.lower() == 'y':
                     is_save_url_to_txt_syslog = 'y'
                     is_edit_txt_info += 1
-                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt_syslog)
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_url_to_txt_syslog)
                     time.sleep(1.15)
                     os.system('cls')
                     continue
                 elif user_input.lower() == 'n':
                     is_save_url_to_txt_syslog = 'n'
                     is_edit_txt_info += 1
-                    print('\nComplete. Now is \'%s\'.'%is_save_url_to_txt_syslog)
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_url_to_txt_syslog)
                     time.sleep(1.15)
                     os.system('cls')
                     continue
@@ -187,14 +187,14 @@ def setNeedUrlCount():
     while True:
         print('< Set URL play count >\n')
         print('How many URLs do you need?')
-        print('Current: %d'%current_need_url_count)
+        print('Current URL count: %d'%current_need_url_count)
 
         try:
             user_input = int(input('= '))
 
             if user_input >= 1:
                 current_need_url_count = user_input
-                print('\nComplete. Now need URL count is %d'%current_need_url_count)
+                print('\nComplete. \nNow need URL count: %d'%current_need_url_count)
                 time.sleep(1.15)
                 return
             else:
@@ -216,7 +216,8 @@ def playSingleImageRepeat(user_image_info):
     os.system('mode con cols=50 lines=11')
     
     cnt = 0
-    print('\n< if you want to stop, press Ctrl+C >')
+    print('\n< if you want to stop,')
+    print('\nclick this program window and press Ctrl+C >')
 
     if user_image_info == 'EXIT':
         return
@@ -287,7 +288,8 @@ def playMultiImageRepeat(user_image_info):
             repeat_units = current_need_url_count
             break
 
-    print('\n< if you want to stop, press Ctrl+C >')
+    print('\n< if you want to stop,')
+    print('\nclick this program window and press Ctrl+C >')
     try:
         if user_image_info[:3] == 'SFW':
                 playMultiImage(user_image_info[:3], user_image_info[3:], repeat_tens, repeat_units)
