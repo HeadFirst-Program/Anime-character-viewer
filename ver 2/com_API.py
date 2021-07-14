@@ -6,6 +6,7 @@ image_delay_time = 2.0 # Single play mode에서 다음 사진을 보여주기까
 
 command_chrome_run = 'start chrome -incognito ' # 크롬 시크릿모드 실행 명령어
 command_edge_run = 'start msedge -inprivate ' # 엣지 시크릿모드 실행 명령어
+command_firefox_run = 'start firefox -private ' # 파이어폭스 시크릿모드 실행 명령어
 
 current_run_browser_name = 'chrome' # 현재 사용 설정된 웹 브라우저 이름
 is_edit_browser_name = 0 # 사용자가 웹 브라우저 설정 창을 본 휫수(설정 시도 휫수)
@@ -52,6 +53,10 @@ def setDelayTime():
                 print('\nComplete. \nNow delay time: %f seconds.'%image_delay_time)
                 time.sleep(1.15)
                 return
+            else:
+                print('[!] Please enter a number! [!]')
+                time.sleep(0.7)
+                os.system('cls')
         except:
             print('[!] Please enter a number! [!]')
             time.sleep(0.7)
@@ -71,7 +76,7 @@ def setBrowser():
     while True:
         print('< Set web browser >\n')
         print('Current web browser: %s'%current_run_browser_name)
-        print('input \'chrome\' or \'edge\'.')
+        print('input \'chrome\' or \'edge\' or \'firefox\'.')
         user_input = input('= ')
 
         if user_input.lower() == 'chrome':
@@ -82,6 +87,12 @@ def setBrowser():
             return
         elif user_input.lower() == 'edge':
             current_run_browser_name = 'edge'
+            is_edit_browser_name += 1
+            print('\nComplete. \nNow web browser is %s.'%current_run_browser_name.upper())
+            time.sleep(1.15)
+            return
+        elif user_input.lower() == 'firefox':
+            current_run_browser_name = 'firefox'
             is_edit_browser_name += 1
             print('\nComplete. \nNow web browser is %s.'%current_run_browser_name.upper())
             time.sleep(1.15)
@@ -209,7 +220,7 @@ def setNeedUrlCount():
 
 
 #by VDoring. 2021.07.05
-#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 연속으로 출력합니다.
+#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 연속으로 사용자가 지정한 브라우저를 통해 출력합니다.
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
 def playSingleImageRepeat(user_image_info):
@@ -237,8 +248,8 @@ def playSingleImageRepeat(user_image_info):
         return
 
 
-#by VDoring. 2021.07.05
-#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 출력합니다.
+#by VDoring. 2021.07.14 updated.
+#사용자가 선택한 이미지 type과 category에 맞는 단일 이미지를 사용자가 지정한 브라우저를 통해 출력합니다.
 #매개변수: user_image_type=사용자가 선택한 이미지 type
 #          user_image_category=사용자가 선택한 이미지 category
 #리턴값: 없음
@@ -247,6 +258,7 @@ def playSingleImage(user_image_type, user_image_category):
     global current_run_browser_name
     global command_chrome_run
     global command_edge_run
+    global command_firefox_run
     
     image_url = 'https://api.waifu.pics/type/category' # API 원본 링크
     image_url = image_url.replace('type', user_image_type.lower()) # type를 사용자가 원하는 type 이름으로 교체
@@ -254,17 +266,23 @@ def playSingleImage(user_image_type, user_image_category):
     
     res = requests.get(image_url) # (이미지 URL 구하는데 약 0.5초 소요)
     image_url = res.text # API에서 받은 값을 text부분만 가지기
+
+    if current_run_browser_name == 'firefox': # 파이어폭스는 실행에 시간이 걸리므로 미리 실행시켜두어 새 창에 생성되는 오류를 방지한다.
+        os.system(command_firefox_run)
+        time.sleep(0.7)
     
     if current_run_browser_name == 'chrome':
         os.system(command_chrome_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
     elif current_run_browser_name == 'edge':
         os.system(command_edge_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
+    elif current_run_browser_name == 'firefox':
+        os.system(command_firefox_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
 
     time.sleep(image_delay_time) # 사용자가 설정한 지연시간
 
 
 #by VDoring. 2021.07.06
-#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 연속으로 출력합니다.
+#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 연속으로 사용자가 지정한 브라우저를 통해 출력합니다.
 #매개변수: user_image_info=사용자가 선택한 이미지 type과 category
 #리턴값: 없음
 def playMultiImageRepeat(user_image_info):
@@ -301,8 +319,8 @@ def playMultiImageRepeat(user_image_info):
         current_need_url_count = original_current_need_url_count # 기존 값 복구
         return
 
-#by VDoring. 2021.07.06
-#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 출력합니다.
+#by VDoring. 2021.07.14 updated.
+#사용자가 선택한 이미지 type과 category에 맞는 다수의 이미지를 사용자가 지정한 브라우저를 통해 출력합니다.
 #매개변수: user_image_type=사용자가 선택한 이미지 type
 #          user_image_category=사용자가 선택한 이미지 category
 #          repeat_tens=이미지 출력을 반복할 휫수. 1당 30개의 이미지 출력
@@ -313,9 +331,14 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
     global current_run_browser_name
     global command_chrome_run
     global command_edge_run
+    global command_firefox_run
     
     all_url_token_list = [] # 갱신된 모든 이미지의 URL을 저장
     cnt = 0
+
+    if current_run_browser_name == 'firefox': # 파이어폭스는 실행에 시간이 걸리므로 미리 실행시켜두어 새 창에 생성되는 오류를 방지한다.
+        os.system(command_firefox_run)
+        time.sleep(0.7)
 
     for tens in range(repeat_tens+1):
         image_url = 'https://api.waifu.pics/many/type/category'
@@ -344,6 +367,7 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
                     os.system(command_chrome_run + res_token_list[i])
                     cnt += 1
                     os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+
         elif current_run_browser_name == 'edge': # 현재 브라우저가 edge일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
@@ -353,6 +377,18 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
             else:
                 for i in range(repeat_units):
                     os.system(command_edge_run + res_token_list[i])
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+
+        elif current_run_browser_name == 'firefox': # 현재 브라우저가 firefox일 경우
+            if tens < repeat_tens:
+                for link in res_token_list:
+                    os.system(command_firefox_run + link)
+                    cnt += 1
+                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+            else:
+                for i in range(repeat_units):
+                    os.system(command_firefox_run + res_token_list[i])
                     cnt += 1
                     os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
 
