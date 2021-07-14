@@ -2,16 +2,16 @@ import com_API as api
 import time
 import os
 
-#by VDoring. 2021.07.05
+#by VDoring. 2021.07.14 updated.
 #메인화면을 출력하고 어떤 메뉴를 선택할 것인지에 대한 입력을 받습니다.
 #리턴값: 1, 2, 3
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.0.1')
+        os.system('title ACv v2.1')
 
         print('     < < Anime Character viewer > >')
-        print('          v2.0.1 - by VDoring \n')
+        print('           v2.1 - by VDoring \n')
         print('[1] Single play')
         print('[2] Multi play')
         print('[3] Settings\n')
