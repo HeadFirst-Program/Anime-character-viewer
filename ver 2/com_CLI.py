@@ -8,10 +8,10 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.1')
+        os.system('title ACv v2.1.1')
 
         print('     < < Anime Character viewer > >')
-        print('           v2.1 - by VDoring \n')
+        print('           v2.1.1 - by VDoring \n')
         print('[1] Single play')
         print('[2] Multi play')
         print('[3] Settings\n')
