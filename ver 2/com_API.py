@@ -266,10 +266,6 @@ def playSingleImage(user_image_type, user_image_category):
     
     res = requests.get(image_url) # (이미지 URL 구하는데 약 0.5초 소요)
     image_url = res.text # API에서 받은 값을 text부분만 가지기
-
-    if current_run_browser_name == 'firefox': # 파이어폭스는 실행에 시간이 걸리므로 미리 실행시켜두어 새 창에 생성되는 오류를 방지한다.
-        os.system(command_firefox_run)
-        time.sleep(0.7)
     
     if current_run_browser_name == 'chrome':
         os.system(command_chrome_run + image_url[8:-3]) # 받은 text 값 중 불필요한 문자를 잘라서 이미지 출력
@@ -424,7 +420,6 @@ def writeTxtFile(all_url_list, repeat_tens, repeat_units):
         f1.close()
 
 # 시스템 .txt파일
-
     if is_save_url_to_txt_syslog == 'y':
         if os.path.isfile(sys_txt_name):
             f2 = open(sys_txt_name, 'a') # 시스템 .txt파일 내용 추가 모드
