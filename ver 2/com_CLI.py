@@ -8,10 +8,10 @@ import os
 def screenTitle():
     while True:
         os.system('mode con cols=40 lines=11')
-        os.system('title ACv v2.1.1')
+        os.system('title ACv v2.2')
 
         print('     < < Anime Character viewer > >')
-        print('           v2.1.1 - by VDoring \n')
+        print('           v2.2 - by VDoring \n')
         print('[1] Single play')
         print('[2] Multi play')
         print('[3] Settings\n')
@@ -39,6 +39,7 @@ def screenSettings():
         print('[1] Image time delay')
         print('[2] Kinds of web browser')
         print('[3] .txt file info')
+        print('[4] Image download')
         print('\n[9] EXIT')
         user_input = input('= ')
 
@@ -48,6 +49,8 @@ def screenSettings():
             api.setBrowser()
         elif user_input == '3':
             api.setSaveUrlToTxt()
+        elif user_input == '4':
+            api.setImageDownload()
         elif user_input == '9':
             return
         else:
