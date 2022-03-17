@@ -1,6 +1,7 @@
 import requests
 import time
 import os
+import subprocess
 
 image_delay_time = 2.0 # Single play mode에서 다음 사진을 보여주기까지의 지연시간
 
@@ -11,13 +12,16 @@ command_firefox_run = 'start firefox -private ' # 파이어폭스 시크릿모�
 current_run_browser_name = 'chrome' # 현재 사용 설정된 웹 브라우저 이름
 is_edit_browser_name = 0 # 사용자가 웹 브라우저 설정 창을 본 휫수(설정 시도 휫수)
 
-is_save_url_to_txt = 'y' # URL을 .txt파일에 저장할 것인지에 대한 여부
-is_save_url_to_txt_syslog = 'y' # URL을 syslog.txt에 저장할 것인지에 대한 여부
+is_save_url_to_txt = 'n' # URL을 .txt파일에 저장할 것인지에 대한 여부
+is_save_url_to_txt_syslog = 'n' # URL을 syslog.txt에 저장할 것인지에 대한 여부
 current_txt_name = 'URLlist' # 사용자 지정 .txt 파일의 이름
 is_edit_txt_info = 0 # 사용자가 .txt파일 설정 창을 본 휫수(설정 시도 휫수)
 
 current_need_url_count = 60 #Multi 모드에서 몇장의 URL 개수가 필요한지 저장
 original_current_need_url_count = 0 # current_need_url_count 변수 값 백업
+
+is_save_image = 'n' # 이미지를 다운로드할 것인지에 대한 여부
+current_image_folder_name = 'ACv-Image' # 사용자 지정 이미지 저장할 폴더의 이름
 
 #by VDoring. 2021.07.05
 #com_API.py의 특정 변수의 값을 올립니다.
@@ -74,7 +78,7 @@ def setBrowser():
     os.system('mode con cols=50 lines=11')
 
     while True:
-        print('< Set web browser >\n')
+        print('< Set Web-browser >\n')
         print('Current web browser: %s'%current_run_browser_name)
         print('input \'chrome\' or \'edge\' or \'firefox\'.')
         user_input = input('= ')
@@ -185,7 +189,58 @@ def setSaveUrlToTxt():
             print('[!] Please enter a right number! [!]')
             time.sleep(0.7)
         os.system('cls')
-
+       
+        
+#by VDoring. 2022.03.16
+#사진 파일 다운로드 여부를 설정합니다.
+#리턴값: 없음
+def setImageDownload():
+    global is_save_image
+    global current_image_folder_name
+    
+    os.system('mode con cols=50 lines=13')
+    
+    while True:
+        print('< Set Image Download >\n')
+        print('[1] Current image download folder name: %s'%current_image_folder_name)
+        print('[2] Current image download: %s'%is_save_image)
+        print('\n[9] EXIT')
+        user_input = input('= ')
+        if user_input == '1': # 폴더 이름 바꾸기
+            print('\nPlease enter the name of the folder you want to replace.')
+            user_input = input('= ')
+            try:
+                current_image_folder_name = user_input
+                print(current_image_folder_name, 'set OK.')
+                time.sleep(1.15)
+            except:
+                print('[!] Folder name change Failed! [!]')
+                time.sleep(0.7)
+        elif user_input == '2': # 사진 다운 여부 설정
+            print('Please set whether to download the photo. [y/n]')
+            user_input = input('= ')
+            try:
+                if user_input.lower() == 'y':
+                    is_save_image = 'y'
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_image)
+                    time.sleep(1.15)
+                elif user_input.lower() == 'n':
+                    is_save_image = 'n'
+                    print('\nComplete. \nNow is \'%s\'.'%is_save_image)
+                    time.sleep(1.15)
+                else:
+                    print('[!] Please enter \'y\' or \'n\'! [!]')
+                    time.sleep(0.7)
+            except:
+                print('[!] Please enter \'y\' or \'n\'! [!]')
+                time.sleep(0.7)
+        elif user_input == '9':
+            return
+        else:
+            print('[!] Please enter a right number! [!]')
+            time.sleep(0.7)
+        os.system('cls')
+            
 
 #by VDoring. 2021.07.05
 #Multi play mode에서 수집할 URL수를 설정할 수 있습니다.
@@ -236,12 +291,12 @@ def playSingleImageRepeat(user_image_info):
         if user_image_info[:3] == 'SFW':
             while True:
                 cnt += 1
-                os.system('title Single mode playing.. ' + '[' + str(cnt) + ']')
+                os.system('title Single mode Playing.. ' + '[' + str(cnt) + ']')
                 playSingleImage(user_image_info[:3], user_image_info[3:])
         elif user_image_info[:4] == 'NSFW':
             while True:
                 cnt += 1
-                os.system('title Single mode playing.. ' + '[' + str(cnt) + ']')
+                os.system('title Single mode Playing.. ' + '[' + str(cnt) + ']')
                 playSingleImage(user_image_info[:4], user_image_info[4:])
 
     except KeyboardInterrupt:
@@ -288,7 +343,7 @@ def playMultiImageRepeat(user_image_info):
     global current_need_url_count
     global original_current_need_url_count
 
-    os.system('mode con cols=50 lines=11')
+    os.system('mode con cols=60 lines=11')
 
     original_current_need_url_count = current_need_url_count # 기존 변수 값 복원을 위해 따로 값을 저장
     repeat_tens = 0 # 전체 단위의 반복 휫수. 1당 이미지 30개를 담당.
@@ -334,7 +389,7 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
 
     if current_run_browser_name == 'firefox': # 파이어폭스는 실행에 시간이 걸리므로 미리 실행시켜두어 새 창에 생성되는 오류를 방지한다.
         os.system(command_firefox_run)
-        time.sleep(0.7)
+        time.sleep(1)
 
     for tens in range(repeat_tens+1):
         image_url = 'https://api.waifu.pics/many/type/category'
@@ -356,39 +411,58 @@ def playMultiImage(user_image_type, user_image_category, repeat_tens, repeat_uni
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_chrome_run + link)
+                    # cmd = r'start chrome -incognito /new-tab {}'.format(link)
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
             else:
                 for i in range(repeat_units):
                     os.system(command_chrome_run + res_token_list[i])
+                    # cmd = r'start chrome -incognito /new-tab {}'.format(res_token_list[i])
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
 
         elif current_run_browser_name == 'edge': # 현재 브라우저가 edge일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_edge_run + link)
+                    # cmd = r'start msedge -inprivate /new-tab {}'.format(link)
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
             else:
                 for i in range(repeat_units):
                     os.system(command_edge_run + res_token_list[i])
+                    # cmd = r'start msedge -inprivate /new-tab {}'.format(res_token_list[i])
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
 
         elif current_run_browser_name == 'firefox': # 현재 브라우저가 firefox일 경우
             if tens < repeat_tens:
                 for link in res_token_list:
                     os.system(command_firefox_run + link)
+                    # cmd = r'start firefox -private /new-tab {}'.format(link)
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
             else:
                 for i in range(repeat_units):
                     os.system(command_firefox_run + res_token_list[i])
+                    # cmd = r'start firefox -private /new-tab {}'.format(res_token_list[i])
+                    # subprocess.Popen(cmd, shell = True)
+                    # time.sleep(0.01)
                     cnt += 1
-                    os.system('title Multi mode playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
+                    os.system('title Multi mode Playing.. [' + str(cnt) + '/' + str(original_current_need_url_count) + ']')
 
     writeTxtFile(all_url_token_list, repeat_tens, repeat_units) # .txt파일에 이미지 URL 작성
+    writeImageFile(all_url_token_list, repeat_tens, repeat_units) # 이미지 URL을 사용해 이미지 다운로드
 
 
 #by VDoring. 2021.07.06
@@ -429,3 +503,39 @@ def writeTxtFile(all_url_list, repeat_tens, repeat_units):
             data = '[' + str(i+1) + ']  ' + all_url_list[i] + '\n'
             f2.write(data)
         f2.close()
+        
+
+#by VDoring. 2022.03.16
+#이미지의 URL을 사용하여 이미지를 다운로드합니다.
+#매개변수: all_url_list=(Multi play mode에서 생성된)모든 URL 리스트
+#          repeat_tens=이미지 URL 기록을 반복할 휫수. 1당 30개의 이미지 URL을 작성할 수 있음
+#          repeat_units=이미지 URL 기록을 반복할 휫수. 1당 1개의 이미지 URL을 작성할 수 있음
+#리턴값: 없음
+def writeImageFile(all_url_list, repeat_tens, repeat_units):
+    global current_image_folder_name
+    global is_save_image
+    
+    if is_save_image == 'y':
+        try: # 폴더 생성
+            if not os.path.exists(current_image_folder_name):
+                os.makedirs(current_image_folder_name)
+        except:
+            print('[!] Image Folder create ERROR! [!]')
+            time.sleep(1.15)
+            return
+        
+        try: # 폴더 이동
+            os.chdir(current_image_folder_name) # 사진 저장 폴더로 이동
+        except:
+            print('[!] Image Folder move ERROR! [!]')
+            time.sleep(1.15)
+            return
+            
+        url_write_count = (repeat_tens * 30) + repeat_units # 리스트에서 URL을 꺼내서 쓸 휫수
+        for i in range(url_write_count):
+            os.system('title Multi mode Downloading.. [' + str(i) + '/' + str(original_current_need_url_count) + ']')
+            link = all_url_list[i]
+            filename = link.replace('https://i.waifu.pics/', '')
+            subprocess.Popen(['curl', '-s', link, '--output', filename]) # -s는 curl 출력값 출력 못하기 함
+            
+        os.chdir("../") # 원위치로 복귀
